@@ -1,0 +1,67 @@
+import java.util.*;
+public class Spellbook
+{
+    ArrayList<String> spells = new ArrayList<String>();
+    int i = 0;
+    String yolkshot     = "Yolk Shot      - 1";
+    String shellblast   = "Shell Blast    - 5";
+    String hardboiled   = "Hard Boiled    - 10";
+    String frenchcooked = "French Cooked  - 15";
+    String devilegg     = "Devil Egg      - 25";
+    public Spellbook()
+    {
+        spells.add(0, yolkshot);
+    }
+    public void addShellBlast()
+    {
+        spells.add(1, shellblast);
+    }
+    public void addHardBoiled()
+    {
+        spells.add(2, hardboiled);
+    }
+    public void addFrenchCooked()
+    {
+        spells.add(3, frenchcooked);
+    }
+    public void addDevilEgg()
+    {
+        spells.add(4, devilegg);
+    }
+    public boolean checkShellBlast()
+    {
+        if (spells.get(1).equals(shellblast))
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean checkHardBoiled()
+    {
+        if (spells.get(2).equals(hardboiled))
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean checkFrenchCooked()
+    {
+        if (spells.get(3).equals(frenchcooked))
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean checkDevilEgg()
+    {
+        if (spells.get(4).equals(devilegg))
+        {
+            return true;
+        }
+        return false;
+    }
+    public String getSpells()
+    {
+        return null;
+    }
+}
