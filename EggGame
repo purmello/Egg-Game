@@ -1,0 +1,1558 @@
+import java.util.*;
+public class EggGame
+{
+    public static void main(String []args)
+    {
+        //System Objects
+        Scanner scan     = new Scanner(System.in);
+        Random rand      = new Random();
+        int statHigh     = 2;
+        int statLow      = 3;
+        int s            = rand.nextInt(statHigh)+6;
+        int d            = 5;
+        int m            = rand.nextInt(2)+3;
+        String n         = "";
+        Egg egg          = new Egg(n, s, d, m);
+        Spellbook spells = new Spellbook();
+        spells.addShellBlast();
+        spells.addHardBoiled();
+        spells.addFrenchCooked();
+        spells.addDevilEgg();
+        boolean exit = false;
+        int health   = egg.getHP();
+        int strength = egg.getStr();
+        int defence  = egg.getDef();
+        int magic    = egg.getMag();
+        int level    = egg.getLvl();
+        int hpConstructor = egg.getDef()/egg.getHP();
+        int totalDamDealt = 0;
+        int totalDamTaken = 0;
+        int spellsCast    = 0;
+        int potionsDrank  = 0;
+        int totalExp      = 0;
+        int coins         = 0;
+        int coinChance    = 5;
+        int coinChancePer = 50;
+        int coinsGot;
+        boolean shop = true;
+        int defSubtractor = (int)egg.getDef()/3;
+
+        //Shop Variables
+        int potionPrice = 5;
+        int statUpPrice = 10;
+        int pouchPrice  = 15;
+        int elixirPrice = 25;
+        int lvlUpPrice  = 50;
+
+        //Game Variables
+        String[] enemies   = { "Dire Rat", 
+                "Chopped Liver", 
+                "Rotten Egg", 
+                "Lesser Balrog",
+                "Potion Seller"};
+        int maxEnemyHealth = egg.getHP()/2;
+        int maxEnemyDamage = (int)Math.abs((egg.getHP()/1.5)-defSubtractor);
+
+        //Player Variables
+        int yourHealth      = egg.getHP();
+        int attackDamage    = egg.getStr();
+        int healthPots      = 3;
+        int healAmount      = egg.getHP();
+        int hpDropChance    = 30; //percent
+        int mana            = egg.getMag();
+        int manaPots        = 3;
+        int manaAmount      = egg.getMag();
+        int manaDropChance  = 30; //percent
+        int exp             = 0;
+        int toNext          = egg.getLvl()*50;
+        int maxPots         = 3;
+
+        //System Terms
+
+        EXIT:
+        while(exit)
+        {
+            break;
+        }
+
+        boolean running  = true;
+        boolean inBattle = false;
+        System.out.println("WELCOME TO THE WORLD OF EGGTIMA");
+        System.out.println("((Enter 'exit' at any time to quit))");
+        System.out.println("---------------------------------------");
+        System.out.println("---------------------------------------");
+        System.out.println("----------------       ----------------");
+        System.out.println("-------------             -------------");
+        System.out.println("------------ / /           ------------");
+        System.out.println("-----------                 -----------");
+        System.out.println("-----------                 -----------");
+        System.out.println("---------                     ---------");
+        System.out.println("---------                     ---------");
+        System.out.println("--------                       --------");
+        System.out.println("--------                       --------");
+        System.out.println("---------                     ---------");
+        System.out.println("----------+                 +----------");
+        System.out.println("-----------+++++       +++++-----------");
+        System.out.println("------------+++++++++++++++------------");
+        System.out.println("---------------------------------------");
+        System.out.println("");
+        System.out.println("Enter Name\n");
+
+        n = scan.nextLine();
+
+        GAME:
+        while(running)
+        {
+            int enemyHealth = rand.nextInt(maxEnemyHealth)+((egg.getHP()/2)+5);
+            int initialHealth = enemyHealth;
+            String enemy = enemies[rand.nextInt(4)];
+            int def = (int)egg.getDef()/3;
+            if(enemy.equals("Potion Seller"))
+            {
+                System.out.println("You encounter a potion seller! You demand only his strongest potions, and he gives you a mana potion!");
+                manaPots ++;
+            }
+            else if(egg.getLvl() %5 == 0){
+                enemyHealth = egg.getLvl() * 10;
+                initialHealth = egg.getLvl() * 10;
+                System.out.println("Holy Egg! It's Satan!");
+                while(enemyHealth > 0)
+                {
+                    System.out.println("");
+                    System.out.println("Enemy HP: " + enemyHealth + "/" + initialHealth);
+                    System.out.println("");
+                    System.out.println("Your HP: " + yourHealth + "/" + egg.getHP());
+                    System.out.println("Your Mana: " + mana + "/" + egg.getMag());
+                    System.out.println("Spells: \n");
+                    System.out.println("[Yolk Shot      - 3]");
+                    System.out.println("[Shell Blast    - 5]");
+                    System.out.println("[Hard Boiled    - 10]");
+                    System.out.println("[French Cooked  - 15]");
+                    System.out.println("[Devil Egg      - 25]");
+                    System.out.println("Health Potions: " + healthPots + "/" + maxPots);
+                    System.out.println("Mana Potions: " + manaPots + "/" + maxPots);
+                    System.out.println("((to view commands, type 'help'))");
+                    System.out.println("");
+                    System.out.println("What do? \n");
+
+                    String input = scan.nextLine().toUpperCase();
+                    if(input.equals("ATTACK") || input.equals("A"))
+                    {
+                        System.out.println("------------------------------");
+                        int damageDealt = rand.nextInt(egg.getStr())+1;
+                        int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                        if(damageTaken < 0){
+                            damageTaken = 1;
+                        }
+                        if(damageDealt == egg.getStr())
+                        {
+                            System.out.println("Sick Nasty! A CRITICAL hit!");
+                            System.out.println("You dealt " + damageDealt + " on Satan!");
+                        }
+                        else
+                        {
+                            System.out.println("You dealt " + damageDealt + " on Satan!");
+                        }
+                        if(damageTaken == maxEnemyDamage)
+                        {
+                            System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                            System.out.println("Satan dealt " + damageTaken + " on you!");
+                        }
+                        else
+                        {
+                            System.out.println("Satan dealt " + damageTaken + " on you!");
+                        }
+                        enemyHealth = enemyHealth - damageDealt;
+                        yourHealth  = yourHealth - damageTaken;
+                        totalDamDealt = totalDamDealt + damageDealt;
+                        totalDamTaken = totalDamTaken + damageTaken;
+                        if(yourHealth < 1)
+                        {
+                            System.out.println("You have taken too much damage. Your journey is at an end.");
+                            break;
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("YOLK SHOT"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 3)
+                        {
+                            int damageDealt = 10;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 10 + " on Satan!");
+                            mana = mana - 3;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("SHELL BLAST"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 5)
+                        {
+                            int damageDealt = 15;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 15 + " on Satan!");
+                            mana = mana - 5;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("HARD BOILED"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 10)
+                        {
+                            int damageDealt = 20;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 20 + " on Satan!");
+                            mana = mana - 10;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("FRENCH COOKED"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 15)
+                        {
+                            int damageDealt = 30;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 30 + " on Satan!");
+                            mana = mana - 15;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("DEVIL EGG"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 25)
+                        {
+                            int damageDealt = 50;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 30 + " on Satan!");
+                            mana = mana - 25;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("Satan dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("HP POTION") || input.equals("HP"))
+                    {
+                        System.out.println("------------------------------");
+                        if(healthPots >= 1)
+                        {
+                            yourHealth = egg.getHP();
+                            healthPots--;
+                            System.out.println("You somehow manage to consume a health potion.");
+                            System.out.println("Your health has been restored.");
+                            potionsDrank++;
+                        }
+                        else
+                        {
+                            System.out.println("You don't have any potions!");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("MANA POTION") || input.equals("MANA"))
+                    {
+                        System.out.println("------------------------------");
+                        if(manaPots >= 1)
+                        {
+                            mana = egg.getMag();
+                            manaPots--;
+                            System.out.println("You somehow manage to consume a mana potion.");
+                            System.out.println("Your mana has been restored.");
+                            potionsDrank++;
+                        }
+                        else
+                        {
+                            System.out.println("You don't have any poions!");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("STATS"))
+                    {
+                        System.out.println("------------------------------");
+                        System.out.println(egg);
+                        System.out.println("EXP: " + exp + "/" + (50*egg.getLvl()));
+                        System.out.println("Coins: " + coins);
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("RUN"))
+                    {
+                        System.out.println("YOU CAN'T RUN FROM THIS ONE!!!");
+                    }
+                    else if(input.equals("HELP"))
+                    {
+                        System.out.println("------------------------------");
+                        System.out.println("Attack: '[a]ttack'");
+                        System.out.println("Cast Spell: '[SPELL NAME]'");
+                        System.out.println("Use Health Potion: '[hp] potion'");
+                        System.out.println("Use Mana Potion: '[mana] potion'");
+                        System.out.println("View Stats: 'stats'");
+                        System.out.println("Run from battle: 'run'");
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("EXIT"))
+                    {
+                        exit = true;
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Invalid Command, type 'help' to see your options.");
+                    }
+                }
+                if(exit == true)
+                {
+                    break;
+                }
+                if(yourHealth < 1)
+                {
+                    break;
+                }
+                else if(yourHealth >= 1)
+                {
+                    System.out.println("");
+                    System.out.println("~***~");
+                    System.out.println("");
+                    System.out.println("Satan has fled... FOR NOW!");
+                    egg.lvlUp();
+                    System.out.println("You have leveled up!!!");
+                    System.out.println("Current level: " + egg.getLvl());
+                    
+                    if(rand.nextInt(100) < hpDropChance && healthPots < maxPots)
+                    {
+                        System.out.println("Health Potion Aquired!");
+                        healthPots++;
+                    }
+                    if(rand.nextInt(100) < manaDropChance && manaPots < maxPots)
+                    {
+                        System.out.println("Mana Potion Aquired!");
+                        manaPots++;
+                    }
+                    if(rand.nextInt(100) < coinChancePer)
+                    {
+                        coinsGot = rand.nextInt(4)+1;
+                        if(coinsGot == 1)
+                        {
+                            System.out.println("You got 1 coin!");
+
+                        }
+                        else
+                        {
+                            System.out.println("You got " + coinsGot + " coins!");
+
+                        }
+                        coins = coins + coinsGot;
+                        System.out.println("((Total coins: " + coins + "))");
+
+                    }
+                    System.out.println("You have " + yourHealth + "/" + egg.getHP() + " health remaining.");
+                    System.out.println("");
+                    System.out.println("What would you like to do? (([c]ontinue, [s]hop, [e]xit))");
+                    System.out.println("");
+                    String input = scan.nextLine().toUpperCase();
+                    while(!input.equals("CONTINUE") && !input.equals("SHOP") && !input.equals("EXIT") && !input.equals("C") && !input.equals("S") && !input.equals("E") && !input.equals("LVL"))
+                    {
+                        System.out.println("Invalid Command!");
+                        input = scan.nextLine().toUpperCase();
+                    }
+                    if(input.equals("CONTINUE") || input.equals("C"))
+                    {
+                        System.out.println("Sick!");
+                        continue GAME;
+                    }
+                    else if(input.equals("LVL"))
+                    {
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        
+                        System.out.println("Congrats! You're a cheater!");
+                        System.out.println("Current Level: " + egg.getLvl());
+                    }
+                    else if(input.equals("SHOP") || input.equals("S"))
+                    {
+                        SHOP:
+                        while(shop)
+                        {
+                            System.out.println("------------------------------");
+                            System.out.println("'Greetings, traveler! What would you like to purchase?'");
+                            System.out.println("");
+
+                            System.out.println("Wares:");
+                            System.out.println("[HP Potion    - " + potionPrice + "g] ((Current: " + healthPots + "/" + maxPots + "))");
+                            System.out.println("[Mana Potion  - " + potionPrice + "g] ((Current: " + manaPots + "/" + maxPots + "))");
+                            System.out.println("[Frying Pan - Str up - " + statUpPrice + "g] ((Current: " + egg.getStr() + "))");
+                            System.out.println("[Egg Armour - Def up - " + statUpPrice + "g] ((Current: " + egg.getDef() + "))");
+                            System.out.println("[Wizard Hat - Mag up - " + statUpPrice + "g] ((Current: " + egg.getMag() + "))");
+                            System.out.println("[Potion Pouch - " + pouchPrice + "g]  ((Current: " + maxPots + "))");
+                            System.out.println("[Enchanted Elixir - " + elixirPrice + "g]");
+                            System.out.println("[Final Exilir - " + lvlUpPrice + "g]");
+                            System.out.println("Coins: " + coins);
+                            System.out.println("------------------------------");
+                            System.out.println("So what'll it be? ((Type 'leave' to leave the shop))");
+                            System.out.println("");
+                            String purchase = scan.nextLine().toUpperCase();
+                            while(!purchase.equals("FRYING PAN") && !purchase.equals("EGG ARMOUR") && !purchase.equals("WIZARD HAT") && !purchase.equals("HP POTION") && !purchase.equals("MANA POTION") && !purchase.equals("ENCHANTED ELIXIR") && !purchase.equals("FINAL ELIXIR") && !purchase.equals("POTION POUCH") && !purchase.equals("LEAVE"))
+                            {
+                                System.out.println("Invalid Command");
+                                purchase = scan.nextLine().toUpperCase();
+                            }
+                            if(purchase.equals("FRYING PAN"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.strUp();
+                                    System.out.println("Strength Increased!");
+                                    System.out.println("Strength: " + egg.getStr());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("EGG ARMOUR"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.defUp();
+                                    System.out.println("Defense Increased!");
+                                    System.out.println("Defense: " + egg.getDef());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("WIZARD HAT"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.magUp();
+                                    System.out.println("Magic Increased!");
+                                    System.out.println("Magic: " + egg.getMag());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+
+                            else if(purchase.equals("HP POTION"))
+                            {
+                                if(coins >= potionPrice && healthPots < maxPots)
+                                {
+                                    healthPots++;
+                                    System.out.println("You bought an HP Potion!");
+                                    System.out.println("HP Potions: " + healthPots);
+                                    coins = coins-potionPrice;
+                                }
+                                else if(coins >= potionPrice && healthPots == maxPots)
+                                {
+                                    System.out.println("You cannot carry any more Health Potions!");
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("MANA POTION"))
+                            {
+                                if(coins >= potionPrice && manaPots < maxPots)
+                                {
+                                    manaPots++;
+                                    System.out.println("You bought an Mana Potion!");
+                                    System.out.println("Mana Potions: " + manaPots);
+                                    coins = coins-potionPrice;
+                                }
+                                else if(coins >= potionPrice && manaPots == maxPots)
+                                {
+                                    System.out.println("You cannot carry any more Mana Potions!");
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("POTION POUCH"))
+                            {
+                                if(coins >= pouchPrice)
+                                {
+                                    System.out.println("Your max potions has increased!");
+                                    maxPots++;
+                                    coins = coins-pouchPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("ENCHANTED ELIXIR"))
+                            {
+                                if(coins >= elixirPrice)
+                                {
+                                    egg.hpUp();
+                                    egg.hpUp();
+                                    System.out.println("Your total HP has increased!");
+                                    System.out.println("Total HP: " + egg.getHP());
+                                    coins = coins-elixirPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("FINAL ELIXIR"))
+                            {
+                                if(coins >= lvlUpPrice)
+                                {
+                                    egg.lvlUp();
+                                    System.out.println("You have leveled up!");
+                                    System.out.println("Level: " + egg.getLvl());
+                                    coins = coins-lvlUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("LEAVE"))
+                            {
+                                System.out.println("Thanks for shopping!");
+                                continue GAME;
+                            }
+                        }
+                    }
+
+                    else if(input.equals("EXIT") || input.equals("E"))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            else
+            {
+                System.out.println("A " + enemy + " has appeared! ((" + enemyHealth + "HP)) \n");
+                while(enemyHealth > 0)
+                {
+                    System.out.println("");
+                    System.out.println("Enemy HP: " + enemyHealth + "/" + initialHealth);
+                    System.out.println("");
+                    System.out.println("Your HP: " + yourHealth + "/" + egg.getHP());
+                    System.out.println("Your Mana: " + mana + "/" + egg.getMag());
+                    System.out.println("Spells: \n");
+                    System.out.println("[Yolk Shot      - 3]");
+                    System.out.println("[Shell Blast    - 5]");
+                    System.out.println("[Hard Boiled    - 10]");
+                    System.out.println("[French Cooked  - 15]");
+                    System.out.println("[Devil Egg      - 25]");
+                    System.out.println("Health Potions: " + healthPots + "/" + maxPots);
+                    System.out.println("Mana Potions: " + manaPots + "/" + maxPots);
+                    System.out.println("((to view commands, type 'help'))");
+                    System.out.println("");
+                    System.out.println("What do? \n");
+
+                    String input = scan.nextLine().toUpperCase();
+                    if(input.equals("ATTACK") || input.equals("A"))
+                    {
+                        System.out.println("------------------------------");
+                        int damageDealt = rand.nextInt(egg.getStr())+1;
+                        int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                        if(damageTaken < 0){
+                            damageTaken = 1;
+                        }
+                        if(damageDealt == egg.getStr())
+                        {
+                            System.out.println("Sick Nasty! A CRITICAL hit!");
+                            System.out.println("You dealt " + damageDealt + " on the " + enemy + "!");
+                        }
+                        else
+                        {
+                            System.out.println("You dealt " + damageDealt + " on the " + enemy + "!");
+                        }
+                        if(damageTaken == maxEnemyDamage)
+                        {
+                            System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                            System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                        }
+                        else
+                        {
+                            System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                        }
+                        enemyHealth = enemyHealth - damageDealt;
+                        yourHealth  = yourHealth - damageTaken;
+                        totalDamDealt = totalDamDealt + damageDealt;
+                        totalDamTaken = totalDamTaken + damageTaken;
+                        if(yourHealth < 1)
+                        {
+                            System.out.println("You have taken too much damage. Your journey is at an end.");
+                            break;
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("YOLK SHOT"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 3)
+                        {
+                            int damageDealt = 10;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 10 + " on the " + enemy + "!");
+                            mana = mana - 3;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("SHELL BLAST"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 5)
+                        {
+                            int damageDealt = 15;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 15 + " on the " + enemy + "!");
+                            mana = mana - 5;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("HARD BOILED"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 10)
+                        {
+                            int damageDealt = 20;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 20 + " on the " + enemy + "!");
+                            mana = mana - 10;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("FRENCH COOKED"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 15)
+                        {
+                            int damageDealt = 30;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 30 + " on the " + enemy + "!");
+                            mana = mana - 15;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("DEVIL EGG"))
+                    {
+                        System.out.println("------------------------------");
+                        if(mana >= 25)
+                        {
+                            int damageDealt = 50;
+                            int damageTaken = (rand.nextInt(initialHealth/2))-(int)(egg.getDef()/4);
+                            if(damageTaken < 0){
+                                damageTaken = 1;
+                            }
+                            System.out.println("You dealt " + 30 + " on the " + enemy + "!");
+                            mana = mana - 25;
+                            if(damageTaken == maxEnemyDamage)
+                            {
+                                System.out.println("Oh no!!! The Enemy scored a CRITICAL hit!");
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            else
+                            {
+                                System.out.println("The " + enemy + " dealt " + damageTaken + " on you!");
+                            }
+                            enemyHealth = enemyHealth - damageDealt;
+                            yourHealth  = yourHealth - damageTaken;
+                            totalDamDealt = totalDamDealt + damageDealt;
+                            totalDamTaken = totalDamTaken + damageTaken;
+                            spellsCast++;
+                            if(yourHealth < 1)
+                            {
+                                System.out.println("You have taken too much damage. Your journey is at an end.");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Insufficient Mana");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("HP POTION") || input.equals("HP"))
+                    {
+                        System.out.println("------------------------------");
+                        if(healthPots >= 1)
+                        {
+                            yourHealth = egg.getHP();
+                            healthPots--;
+                            System.out.println("You somehow manage to consume a health potion.");
+                            System.out.println("Your health has been restored.");
+                            potionsDrank++;
+                        }
+                        else
+                        {
+                            System.out.println("You don't have any potions!");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("MANA POTION") || input.equals("MANA"))
+                    {
+                        System.out.println("------------------------------");
+                        if(manaPots >= 1)
+                        {
+                            mana = egg.getMag();
+                            manaPots--;
+                            System.out.println("You somehow manage to consume a mana potion.");
+                            System.out.println("Your mana has been restored.");
+                            potionsDrank++;
+                        }
+                        else
+                        {
+                            System.out.println("You don't have any poions!");
+                        }
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("STATS"))
+                    {
+                        System.out.println("------------------------------");
+                        System.out.println(egg);
+                        System.out.println("EXP: " + exp + "/" + (50*egg.getLvl()));
+                        System.out.println("Coins: " + coins);
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("RUN"))
+                    {
+                        System.out.println("------------------------------");
+                        System.out.println("You escaped the " + enemy + ", but dropped one of each potion!");
+                        System.out.println("------------------------------");
+                        if(healthPots >= 1 && manaPots >= 1)
+                        {
+                            healthPots--;
+                            manaPots--;
+                        }
+                        continue GAME;
+                    }
+                    else if(input.equals("HELP"))
+                    {
+                        System.out.println("------------------------------");
+                        System.out.println("Attack: '[a]ttack'");
+                        System.out.println("Cast Spell: '[SPELL NAME]'");
+                        System.out.println("Use Health Potion: '[hp] potion'");
+                        System.out.println("Use Mana Potion: '[mana] potion'");
+                        System.out.println("View Stats: 'stats'");
+                        System.out.println("Run from battle: 'run'");
+                        System.out.println("------------------------------");
+                    }
+                    else if(input.equals("EXIT"))
+                    {
+                        exit = true;
+                        break;
+                    }
+                    else
+                    {
+                        System.out.println("Invalid Command, type 'help' to see your options.");
+                    }
+                }
+
+                if(exit == true)
+                {
+                    break;
+                }
+                if(yourHealth < 1)
+                {
+                    break;
+                }
+                else if(yourHealth >= 1)
+                {
+                    System.out.println("");
+                    System.out.println("~***~");
+                    System.out.println("");
+                    System.out.println("The " + enemy + " was defeated!");
+                    exp = exp + (initialHealth*2);
+                    totalExp = totalExp + (initialHealth*2);
+                    if(exp >= 50*egg.getLvl())
+                    {
+                        egg.lvlUp();
+                        System.out.println("Congraduration! You have leveled up!");
+                        System.out.println("Level " + egg.getLvl());
+                        System.out.println("Strength: " + egg.getStr());
+                        System.out.println("Defence: " + egg.getDef());
+                        System.out.println("Max Health Increased to " + egg.getHP());
+                        System.out.println("Max Mana Increased to " + egg.getMag());
+                        exp = 0;
+                    }
+                    if(rand.nextInt(100) < hpDropChance && healthPots < maxPots)
+                    {
+                        System.out.println("Health Potion Aquired!");
+                        healthPots++;
+                    }
+                    if(rand.nextInt(100) < manaDropChance && manaPots < maxPots)
+                    {
+                        System.out.println("Mana Potion Aquired!");
+                        manaPots++;
+                    }
+                    if(rand.nextInt(100) < coinChancePer)
+                    {
+                        coinsGot = rand.nextInt(4)+1;
+                        if(coinsGot == 1)
+                        {
+                            System.out.println("You got 1 coin!");
+
+                        }
+                        else
+                        {
+                            System.out.println("You got " + coinsGot + " coins!");
+
+                        }
+                        coins = coins + coinsGot;
+                        System.out.println("((Total coins: " + coins + "))");
+
+                    }
+                    System.out.println("You have " + yourHealth + "/" + egg.getHP() + " health remaining.");
+                    System.out.println("");
+                    System.out.println("What would you like to do? (([c]ontinue, [s]hop, [e]xit))");
+                    System.out.println("");
+                    String input = scan.nextLine().toUpperCase();
+                    while(!input.equals("CONTINUE") && !input.equals("SHOP") && !input.equals("EXIT") && !input.equals("C") && !input.equals("S") && !input.equals("E") && !input.equals("LVL"))
+                    {
+                        System.out.println("Invalid Command!");
+                        input = scan.nextLine().toUpperCase();
+                    }
+                    if(input.equals("CONTINUE") || input.equals("C"))
+                    {
+                        System.out.println("Sick!");
+                        continue GAME;
+                    }
+                    else if(input.equals("LVL"))
+                    {
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        egg.lvlUp();
+                        System.out.println("Congrats! You're a cheater!");
+                        System.out.println("Current Level: " + egg.getLvl());
+                    }
+                    else if(input.equals("SHOP") || input.equals("S"))
+                    {
+                        SHOP:
+                        while(shop)
+                        {
+                            System.out.println("------------------------------");
+                            System.out.println("'Greetings, traveler! What would you like to purchase?'");
+                            System.out.println("");
+
+                            System.out.println("Wares:");
+                            System.out.println("[HP Potion    - " + potionPrice + "g] ((Current: " + healthPots + "/" + maxPots + "))");
+                            System.out.println("[Mana Potion  - " + potionPrice + "g] ((Current: " + manaPots + "/" + maxPots + "))");
+                            System.out.println("[Frying Pan - Str up - " + statUpPrice + "g] ((Current: " + egg.getStr() + "))");
+                            System.out.println("[Egg Armour - Def up - " + statUpPrice + "g] ((Current: " + egg.getDef() + "))");
+                            System.out.println("[Wizard Hat - Mag up - " + statUpPrice + "g] ((Current: " + egg.getMag() + "))");
+                            System.out.println("[Potion Pouch - " + pouchPrice + "g]  ((Current: " + maxPots + "))");
+                            System.out.println("[Enchanted Elixir - " + elixirPrice + "g]");
+                            System.out.println("[Final Exilir - " + lvlUpPrice + "g]");
+                            System.out.println("Coins: " + coins);
+                            System.out.println("------------------------------");
+                            System.out.println("So what'll it be? ((Type 'leave' to leave the shop))");
+                            System.out.println("");
+                            String purchase = scan.nextLine().toUpperCase();
+                            while(!purchase.equals("FRYING PAN") && !purchase.equals("EGG ARMOUR") && !purchase.equals("WIZARD HAT") && !purchase.equals("HP POTION") && !purchase.equals("MANA POTION") && !purchase.equals("ENCHANTED ELIXIR") && !purchase.equals("FINAL ELIXIR") && !purchase.equals("POTION POUCH") && !purchase.equals("LEAVE"))
+                            {
+                                System.out.println("Invalid Command");
+                                purchase = scan.nextLine().toUpperCase();
+                            }
+                            if(purchase.equals("FRYING PAN"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.strUp();
+                                    System.out.println("Strength Increased!");
+                                    System.out.println("Strength: " + egg.getStr());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("EGG ARMOUR"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.defUp();
+                                    System.out.println("Defense Increased!");
+                                    System.out.println("Defense: " + egg.getDef());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("WIZARD HAT"))
+                            {
+                                if(coins >= statUpPrice)
+                                {
+                                    egg.magUp();
+                                    System.out.println("Magic Increased!");
+                                    System.out.println("Magic: " + egg.getMag());
+                                    coins = coins-statUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+
+                            else if(purchase.equals("HP POTION"))
+                            {
+                                if(coins >= potionPrice && healthPots < maxPots)
+                                {
+                                    healthPots++;
+                                    System.out.println("You bought an HP Potion!");
+                                    System.out.println("HP Potions: " + healthPots);
+                                    coins = coins-potionPrice;
+                                }
+                                else if(coins >= potionPrice && healthPots == maxPots)
+                                {
+                                    System.out.println("You cannot carry any more Health Potions!");
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("MANA POTION"))
+                            {
+                                if(coins >= potionPrice && manaPots < maxPots)
+                                {
+                                    manaPots++;
+                                    System.out.println("You bought an Mana Potion!");
+                                    System.out.println("Mana Potions: " + manaPots);
+                                    coins = coins-potionPrice;
+                                }
+                                else if(coins >= potionPrice && manaPots == maxPots)
+                                {
+                                    System.out.println("You cannot carry any more Mana Potions!");
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("POTION POUCH"))
+                            {
+                                if(coins >= pouchPrice)
+                                {
+                                    System.out.println("Your max potions has increased!");
+                                    maxPots++;
+                                    coins = coins-pouchPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("ENCHANTED ELIXIR"))
+                            {
+                                if(coins >= elixirPrice)
+                                {
+                                    egg.hpUp();
+                                    egg.hpUp();
+                                    System.out.println("Your total HP has increased!");
+                                    System.out.println("Total HP: " + egg.getHP());
+                                    coins = coins-elixirPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("FINAL ELIXIR"))
+                            {
+                                if(coins >= lvlUpPrice)
+                                {
+                                    egg.lvlUp();
+                                    System.out.println("You have leveled up!");
+                                    System.out.println("Level: " + egg.getLvl());
+                                    coins = coins-lvlUpPrice;
+                                }
+                                else
+                                {
+                                    System.out.println("You don't have enough coins!");
+                                }
+                                System.out.println("Coins: " + coins);
+                                System.out.println("Continue shopping? ((Y/N))");
+                                System.out.println();
+                                purchase = scan.nextLine().toUpperCase();
+                                while(!purchase.equals("Y") && !purchase.equals("N"))
+                                {
+                                    System.out.println("Invalid Command");
+                                    purchase = scan.nextLine().toUpperCase();
+                                }
+                                if(purchase.equals("Y"))
+                                {
+                                    continue SHOP;
+                                }
+                                if(purchase.equals("N"))
+                                {
+                                    System.out.println("Thanks for shopping!");
+                                    System.out.println("");
+                                    continue GAME;
+                                }
+                            }
+                            else if(purchase.equals("LEAVE"))
+                            {
+                                System.out.println("Thanks for shopping!");
+                                continue GAME;
+                            }
+                        }
+                    }
+
+                    else if(input.equals("EXIT") || input.equals("E"))
+                    {
+                        break;
+                    }
+                }
+
+            }
+        }
+        System.out.println("Thanks for Playing!");
+
+        System.out.println("");
+        System.out.println("~***~");
+        System.out.println("Results:");
+        System.out.println("Name: " + n);
+        System.out.println(egg);
+        System.out.println("Total EXP: " + totalExp);
+        System.out.println("Coins: " + coins);
+        System.out.println("Total Damage Dealt: " + totalDamDealt);
+        System.out.println("Total Damage Taken: " + totalDamTaken);
+        System.out.println("Potions Drank: " + potionsDrank);
+        System.out.println("~***~");
+
+        egg.toString();
+    }
+}
